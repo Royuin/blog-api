@@ -10,7 +10,7 @@ const PostSchema = new Schema ({
   author: { required: true, type: User.Types.ObjectId },
   postDate: { required: true, type: Date },
   comments: { type: [Comment], default: undefined },
-  public: { required: true, type: Boolean },
+  isPublic: { required: true, type: Boolean },
 });
 
 module.exports = mongoose.model('Post', PostSchema);
