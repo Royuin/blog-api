@@ -7,7 +7,7 @@ const Comment = require('./comment');
 const PostSchema = new Schema ({
   title: { required: true, minLength: 3, type: String },
   content: { required: true, type: String },
-  author: { required: true, type: User.Types.ObjectId },
+  author: { required: true, type: Schema.Types.ObjectId, ref: 'User'},
   postDate: { required: true, type: Date },
   comments: { type: [Comment], default: undefined },
   isPublic: { required: true, type: Boolean },
