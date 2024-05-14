@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
-import { ObjectId, VirtualPathFunctions } from "mongoose";
+import { Sign, pbkdf2 } from "crypto";
+import { Aggregate, AnyExpression, ObjectId, VirtualPathFunctions } from "mongoose";
 
 console.log('This script will populate the database with any users, posts, and or comments given.');
 
@@ -9,13 +10,40 @@ const User = require('./models/user');
 const Post = require('../models/post');
 const Comment = require('./models/comment');
 const express = require('express');
+// const mongoose = require('mongoose');
+const ObjectId = 'mongoose';
+
 const err = express;
 
 const userArgs = process.argv.slice(2);
 
-const users = [];
-const posts:object[] = [];
-const comments = [];
+interface user {
+  _id: ObjectId,
+  username: string,
+  password: string,
+  posts: ObjectId[],
+  isAuthor: boolean,
+};
+
+interface post {
+  _id: ObjectId,
+  title: string,
+  content: string,
+  author: ObjectId,
+  postDate: string,
+  comments: ObjectId[],
+};
+
+interface comment {
+  _id: ObjectId,
+  author: ObjectId,
+  content: string,
+  postDate: string,
+};
+
+const users:user[] = [];
+const posts:post[] = [];
+const comments:comment[] = [];
 
 mongoose.set('strictQuery', false);
 
@@ -34,7 +62,7 @@ async function main() {
   console.log('You have been disconnected');
 }
 
-async function userCreation(index:number, username:string, password:string, posts:object[], isAuthor:boolean) {
+async function userCreation(index:number, username:string, password:string, posts:ObjectId[], isAuthor:boolean) {
   const newUser = new User({username, password, posts, isAuthor});
   await newUser.save();
   users[index] = newUser;
@@ -42,7 +70,7 @@ async function userCreation(index:number, username:string, password:string, post
   console.log(`Creating user: ${username}`);
 };
 
-async function postCreation(index:number, title:string, content:string, author:ObjectId, postDate:string, comments:object[], isPublic:boolean) {
+async function postCreation(index:number, title:string, content:string, author:ObjectId, postDate:string, comments:ObjectId[], isPublic:boolean) {
   const newPost = new Post({title, content, author, postDate, comments, isPublic});
   await newPost.save();
   posts[index] = newPost;
@@ -55,5 +83,3 @@ async function commentCreation(index:number, author:ObjectId, content:string, po
   comments[index] = newComment;
   console.log(`Adding comment: ${content}`);
 };
-
-
