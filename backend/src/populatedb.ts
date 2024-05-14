@@ -83,3 +83,28 @@ async function commentCreation(index:number, author:ObjectId, content:string, po
   comments[index] = newComment;
   console.log(`Adding comment: ${content}`);
 };
+
+async function createUsers() {
+  console.log('Creating users');
+  await Promise.all([
+    userCreation(0,
+      'John',
+      'password1',
+      [posts[0]._id, posts[1]._id],
+      true
+    ),
+    userCreation(1,
+      'Sally',
+      'password2',
+      [posts[2]._id],
+      false
+    ),
+    userCreation(2,
+      'Billy',
+      'password3',
+      [posts[3]._id],
+      false
+    ),
+  ]);
+};
+
