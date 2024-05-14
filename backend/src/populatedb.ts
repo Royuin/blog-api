@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-import { Sign, pbkdf2 } from "crypto";
 import { Aggregate, AnyExpression, ObjectId, VirtualPathFunctions } from "mongoose";
 
 console.log('This script will populate the database with any users, posts, and or comments given.');
@@ -146,3 +145,23 @@ async function createPosts() {
   ]);
 };
 
+async function createComments() {
+  console.log('Creating Comments');
+  await Promise.all ([
+    commentCreation(0,
+      users[1]._id,
+      'OMG this is so great!',
+      Date()
+    ),
+    commentCreation(1,
+      users[2]._id,
+      'OMG this is so bad!',
+      Date(),
+    ),
+    commentCreation(2,
+      users[0]._id,
+      'Eh mine was better.',
+      Date()
+    ),
+  ]);
+};
