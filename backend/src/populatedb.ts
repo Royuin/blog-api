@@ -6,11 +6,10 @@ console.log('This script will populate the database with any users, posts, and o
 
 const mongoose = require('mongoose');
 const User = require('./models/user');
-const Post = require('../models/post');
+const Post = require('./models/post');
 const Comment = require('./models/comment');
 const express = require('express');
-// const mongoose = require('mongoose');
-const ObjectId = 'mongoose';
+require('dotenv').config();
 
 const err = express;
 
@@ -89,19 +88,19 @@ async function createUsers() {
     userCreation(0,
       'John',
       'password1',
-      [posts[0]._id, posts[1]._id],
+      [],
       true
     ),
     userCreation(1,
       'Sally',
       'password2',
-      [posts[2]._id],
+      [],
       false
     ),
     userCreation(2,
       'Billy',
       'password3',
-      [posts[3]._id],
+      [],
       false
     ),
   ]);
@@ -121,7 +120,7 @@ async function createPosts() {
     postCreation(1,
        'John Test Post 2',
        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam eget lectus tristique, hendrerit dolor sed, scelerisque nibh. In hac habitasse platea dictumst. Morbi imperdiet, velit non blandit gravida, dolor felis consequat ante, ut molestie nisl ligula nec enim. Sed erat lacus, vehicula et iaculis eget, vestibulum fermentum sapien. Vestibulum eget euismod odio, sed venenatis velit. Duis sed odio non neque faucibus varius. Cras imperdiet aliquet placerat. Proin accumsan lacus neque, nec lobortis ex rhoncus vel. Praesent ut lacus cursus, dictum justo ac, pretium orci. Nulla facilisi. Fusce sed turpis bibendum, vulputate libero id, tristique dui. Mauris rhoncus feugiat suscipit. Praesent sed malesuada magna. In cursus turpis risus, eget volutpat risus pellentesque ut. Nunc eu iaculis mauris, ac sollicitudin nisl. Suspendisse et viverra eros, efficitur iaculis quam. Proin hendrerit, dolor ac pulvinar placerat, odio leo porta mi, tempor feugiat nibh nisi eget turpis. Morbi vel ullamcorper nisl. Sed bibendum, lorem ac commodo vulputate, lacus purus semper massa, quis facilisis elit augue a lacus. Pellentesque pellentesque at enim in tincidunt. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec eleifend venenatis turpis sit amet commodo. ',
-      users[1]._id,
+      users[0]._id,
       Date(),
       [],
       true,
@@ -129,7 +128,7 @@ async function createPosts() {
     postCreation(0,
        'Sally Test Post 1',
        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam eget lectus tristique, hendrerit dolor sed, scelerisque nibh. In hac habitasse platea dictumst. Morbi imperdiet, velit non blandit gravida, dolor felis consequat ante, ut molestie nisl ligula nec enim. Sed erat lacus, vehicula et iaculis eget, vestibulum fermentum sapien. Vestibulum eget euismod odio, sed venenatis velit. Duis sed odio non neque faucibus varius. Cras imperdiet aliquet placerat. Proin accumsan lacus neque, nec lobortis ex rhoncus vel. Praesent ut lacus cursus, dictum justo ac, pretium orci. Nulla facilisi. Fusce sed turpis bibendum, vulputate libero id, tristique dui. Mauris rhoncus feugiat suscipit. Praesent sed malesuada magna. In cursus turpis risus, eget volutpat risus pellentesque ut. Nunc eu iaculis mauris, ac sollicitudin nisl. Suspendisse et viverra eros, efficitur iaculis quam. Proin hendrerit, dolor ac pulvinar placerat, odio leo porta mi, tempor feugiat nibh nisi eget turpis. Morbi vel ullamcorper nisl. Sed bibendum, lorem ac commodo vulputate, lacus purus semper massa, quis facilisis elit augue a lacus. Pellentesque pellentesque at enim in tincidunt. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec eleifend venenatis turpis sit amet commodo. ',
-      users[2]._id,
+      users[1]._id,
       Date(),
       [comments[2]._id],
       true,
@@ -137,12 +136,26 @@ async function createPosts() {
     postCreation(0,
        'Billy Test Post 1',
        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam eget lectus tristique, hendrerit dolor sed, scelerisque nibh. In hac habitasse platea dictumst. Morbi imperdiet, velit non blandit gravida, dolor felis consequat ante, ut molestie nisl ligula nec enim. Sed erat lacus, vehicula et iaculis eget, vestibulum fermentum sapien. Vestibulum eget euismod odio, sed venenatis velit. Duis sed odio non neque faucibus varius. Cras imperdiet aliquet placerat. Proin accumsan lacus neque, nec lobortis ex rhoncus vel. Praesent ut lacus cursus, dictum justo ac, pretium orci. Nulla facilisi. Fusce sed turpis bibendum, vulputate libero id, tristique dui. Mauris rhoncus feugiat suscipit. Praesent sed malesuada magna. In cursus turpis risus, eget volutpat risus pellentesque ut. Nunc eu iaculis mauris, ac sollicitudin nisl. Suspendisse et viverra eros, efficitur iaculis quam. Proin hendrerit, dolor ac pulvinar placerat, odio leo porta mi, tempor feugiat nibh nisi eget turpis. Morbi vel ullamcorper nisl. Sed bibendum, lorem ac commodo vulputate, lacus purus semper massa, quis facilisis elit augue a lacus. Pellentesque pellentesque at enim in tincidunt. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec eleifend venenatis turpis sit amet commodo. ',
-      users[3]._id,
+      users[2]._id,
       Date(),
       [],
       false,
   ),
   ]);
+
+  console.log('Updating user posts');
+  const johnUser = await User.findById(users[0]._id);
+  johnUser.posts = [posts[0]._id, posts[1]._id]
+  await johnUser.save();
+
+  const sallyUser = await User.findById(users[1]._id);
+  sallyUser.posts = [posts[2]._id];
+  await sallyUser.save();
+        
+  const billyUser = await User.findById(users[2]._id);
+  billyUser.posts = [posts[3]._id];
+  await billyUser.save();
+      
 };
 
 async function createComments() {
