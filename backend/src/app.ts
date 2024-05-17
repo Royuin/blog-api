@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 const indexRouter = require('./routes/index');
+const postRouter = require('./routes/post');
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use(cookieParser());
 app.use(cors());
 
 app.use('/', indexRouter);
+app.use('/', postRouter);
 
 app.use(function(req:Request, res:Response, next:NextFunction) {
   next(createError(404));
