@@ -3,11 +3,11 @@ const router = express.Router();
 const Post = require('../models/post');
 
 router.get('/', async function(req:Request, res:Response, next:NextFunction) {
-  const posts = await Post.find();
-  const postsJson = JSON.stringify(posts);
+  const recentPosts = await Post.find().sort({postDate: -1}).limit(3);
+  const recentPostsJson = JSON.stringify(recentPosts);
   res.json({
     "title": "Blog",
-    "posts": postsJson,
+    "recentposts": recentPostsJson,
   });
 });
 
