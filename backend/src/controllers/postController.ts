@@ -7,3 +7,10 @@ exports.getPost( async (req:Request, res:Response, next:NextFunction) => {
     "post": post,
   });
 });
+
+exports.allPosts( async (req:Request, res:Response, next:NextFunction) => {
+  const allPosts = await Post.find();
+  res.json({
+    "allPosts": allPosts,
+  });
+});
