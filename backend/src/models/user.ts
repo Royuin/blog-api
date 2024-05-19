@@ -1,7 +1,6 @@
 export {};
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
-const Post = require('./post');
 
 const UserSchema = new Schema ({
   username: { required: true, type: String, minLength: 3}, 
