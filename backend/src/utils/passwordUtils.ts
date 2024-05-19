@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 
-function genPassword(password:string) {
-  const hash = bcrypt.hash(password, 10);
+async function genPassword(password:string) {
+  const hash = await bcrypt.hash(password, 10);
   return hash;
 };
 
