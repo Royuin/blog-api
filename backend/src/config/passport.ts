@@ -3,6 +3,7 @@ const User = require('../models/user');
 import { ObjectId } from 'mongoose';
 import * as passportLocal from 'passport-local';
 const LocalStrategy = passportLocal.Strategy;
+const validatePassword = require('../utils/passwordUtils');
 
 interface userDocument {
   username: string;
@@ -16,7 +17,7 @@ passport.use(new LocalStrategy(function verify(username:string, password:string,
     if (err) { return done(err); }
     if (!user) { return done(null, false, { message: 'Incorrect username.'}); }
 
-    const isValid = await bcrypt.compare(password, user.passwordHash);
+    const isValid = await validatePassword(password, user.passwordHash);
 
     if(isValid) {
       return done(null, user);
