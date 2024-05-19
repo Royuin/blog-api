@@ -9,6 +9,7 @@ const User = require('./models/user');
 const Post = require('./models/post');
 const Comment = require('./models/comment');
 const express = require('express');
+const { genPassword } = require('./utils/passwordUtils');
 require('dotenv').config();
 
 interface user {
@@ -83,19 +84,19 @@ async function createUsers() {
   await Promise.all([
     userCreation(0,
       'John',
-      'password1',
+      await genPassword('password1'),
       [],
       true
     ),
     userCreation(1,
       'Sally',
-      'password2',
+      await genPassword('password2'),
       [],
       false
     ),
     userCreation(2,
       'Billy',
-      'password3',
+      await genPassword('password3'),
       [],
       false
     ),
