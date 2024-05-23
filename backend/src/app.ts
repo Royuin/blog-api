@@ -1,10 +1,10 @@
 const createError = require('http-errors');
 import express, {Request, Response, NextFunction, ErrorRequestHandler} from 'express';
-const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const passport = require('passport');
 require('dotenv').config();
 
 const indexRouter = require('./routes/index');
@@ -20,6 +20,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors());
+app.use(passport.initialize());
 
 app.use('/', indexRouter);
 app.use('/', postRouter);
@@ -36,7 +37,7 @@ const errorHandler:ErrorRequestHandler = (err, req:Request, res:Response, next:N
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.json('error');
 };
 app.use(errorHandler)
 
