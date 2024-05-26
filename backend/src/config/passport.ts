@@ -3,7 +3,7 @@ const User = require('../models/user');
 import { ObjectId } from 'mongoose';
 import * as passportLocal from 'passport-local';
 const LocalStrategy = passportLocal.Strategy;
-const validatePassword = require('../utils/passwordUtils');
+const { validatePassword } = require('../utils/passwordUtils');
 
 interface userDocument {
   username: string;
@@ -24,5 +24,9 @@ passport.use(new LocalStrategy(function verify(username:string, password:string,
     } else if (!isValid) {
       return done(err);
     }
+
+    if (err) {
+      done(err);
+    };
   }
 }));
