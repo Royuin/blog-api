@@ -35,7 +35,6 @@ exports.signupPost = [
 ];
 
 exports.loginPost =  ( async (req:Request, res:Response, next:NextFunction) => {
-  console.log('LOGIN POST');
   passport.authenticate('local', {successRedirect: '/', failure: '/' })
   const user = await User.findOne({username: req.body.username});
 
