@@ -1,5 +1,13 @@
 import { Request, Response, NextFunction } from "express";
 
+declare global {
+  namespace Express {
+    interface Request {
+      token: string; 
+    }
+  }
+}
+
 function verifyToken(req:Request, res:Response, next:NextFunction) {
 
   const bearerHeader = req.headers['authorization'];
@@ -12,5 +20,4 @@ function verifyToken(req:Request, res:Response, next:NextFunction) {
   } else {
     return res.status(403).json({ error: 'Unauthorized user'});
   }
-
-});
+};
