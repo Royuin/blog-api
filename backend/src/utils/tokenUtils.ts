@@ -9,7 +9,6 @@ declare global {
 }
 
 function verifyToken(req:Request, res:Response, next:NextFunction) {
-
   const bearerHeader = req.headers['authorization'];
 
   if(typeof bearerHeader !== 'undefined') {
@@ -21,3 +20,5 @@ function verifyToken(req:Request, res:Response, next:NextFunction) {
     return res.status(403).json({ error: 'Unauthorized user'});
   }
 };
+
+module.exports.verifyToken = verifyToken;
