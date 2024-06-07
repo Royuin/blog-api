@@ -5,6 +5,7 @@ import { query, validationResult } from 'express-validator';
 const genPassword = require('../utils/passwordUtils');
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
+const verifytoken = require('../utils/tokenUtils');
 
 exports.signupPost = [
   query('username', 'Username must not be empty and must be at least 3 characters.').trim().notEmpty().isLength({min: 3, max: 20}).escape(),
@@ -35,7 +36,7 @@ exports.signupPost = [
 ];
 
 exports.loginPost =  ( async (req:Request, res:Response, next:NextFunction) => {
-  passport.authenticate('local', {successRedirect: '/', failure: '/' })
+  passport.authenticate('local', {successRedirect: '/', failure: '/login' });
   const user = await User.findOne({username: req.body.username});
 
   // Add token expiration probably about 1hr
@@ -44,7 +45,6 @@ exports.loginPost =  ( async (req:Request, res:Response, next:NextFunction) => {
       token
     });
   });
-  
 });
 
 exports.allUsers = ( async (req:Request, res:Response, next:NextFunction) => {
