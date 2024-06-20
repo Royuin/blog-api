@@ -36,7 +36,6 @@ exports.signupPost = [
 ];
 
 exports.loginPost =  ( async (req:Request, res:Response, next:NextFunction) => {
-  passport.authenticate('local', {successRedirect: '/', failure: '/login' });
   const user = await User.findOne({username: req.body.username});
 
   // Add token expiration probably about 1hr
