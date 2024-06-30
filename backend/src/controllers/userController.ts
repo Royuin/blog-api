@@ -38,12 +38,16 @@ exports.signupPost = [
 exports.loginPost =  ( async (req:Request, res:Response, next:NextFunction) => {
   const user = await User.findOne({username: req.body.username});
 
-  // Add token expiration probably about 1hr
+  // Add token expiration probably about 30mins
   jwt.sign({user}, process.env.JWT_SECRET, (err:object, token:object) => {
-    res.json({
-      token
+    // res.json({
+    //   token
+    // });
+    res.cookie('token', token, {
+    httpOnly: true,
     });
   });
+  return res.redirect('/');
 });
 
 exports.allUsers = ( async (req:Request, res:Response, next:NextFunction) => {
