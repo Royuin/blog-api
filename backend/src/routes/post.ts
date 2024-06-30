@@ -8,4 +8,7 @@ router.get('/posts/', postController.allPosts);
 
 router.get('/user/posts/:id', postController.userPosts);
 
+router.get('/posts/create', postController.createPostGet);
+router.post('/posts/create', postController.createPost);
+
 module.exports = router;
