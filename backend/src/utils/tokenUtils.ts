@@ -1,4 +1,6 @@
-import { Request, Response, NextFunction } from "express";
+import express, { Request, Response, NextFunction } from "express";
+const jwt = require('jsonwebtoken');
+
 
 declare global {
   namespace Express {
@@ -18,6 +20,18 @@ function verifyToken(req:Request, res:Response, next:NextFunction) {
     next();
   } else {
     return res.status(403).json({ error: 'Unauthorized user'});
+  }
+};
+
+exports.cookieJwtAuth = (req:Request, res:Response, next:NextFunction) => {
+  const token = req.cookies.token;
+  try {
+    const user = jwt.verify(token, 'SECRET');
+    req.user = user;
+    next();
+  } catch (err) {
+    res.clearCookie('token');
+    return res.redirect('/');
   }
 };
 
