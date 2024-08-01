@@ -10,7 +10,7 @@ router.get('/posts/', postController.allPosts);
 
 router.get('/user/posts/:id', postController.userPosts);
 
-router.get('/posts/create', cookieJwtAuth, postController.createPostGet);
-router.post('/posts/create', postController.createPost);
+router.get('/posts/create', cookieJwtAuth);
+router.post('/posts/create', cookieJwtAuth, postController.createPost);
 
 module.exports = router;
