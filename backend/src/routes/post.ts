@@ -13,4 +13,6 @@ router.get('/user/posts/:id', postController.userPosts);
 router.get('/posts/create', cookieJwtAuth);
 router.post('/posts/create', cookieJwtAuth, postController.createPost);
 
+router.get('/post/:id/update', cookieJwtAuth, postController.getPostUpdate);
+
 module.exports = router;
