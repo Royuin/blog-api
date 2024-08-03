@@ -37,9 +37,17 @@ exports.createPost = [
   query('isPublic').escape(), 
 
   async (req:Request, res:Response, next:NextFunction) => {
+    const errors = validationResult(req);
 
-    // Test this function vs cookieJwtAuth and see if either one doesnt work
-    verifyToken();
+    if(!errors.isEmpty()) {
+      res.json({
+        errors:errors
+      });
+    } else {
+
+      // Test this function vs cookieJwtAuth and see if either one doesnt work
+      verifyToken();
+    }
   },
 ]
 
@@ -56,13 +64,21 @@ exports.updatePost = [
   query('content', 'Content must not be empty and be at least 50 characters long.').trim().isLength({min: 50}).escape(),
   query('isPublic').escape(), 
 
-   async (req:Request, res:Response, next:NextFunction) => {
-    const post = await Post.findById(req.params.id).exec();
+  async (req:Request, res:Response, next:NextFunction) => {
+    const errors = validationResult(req);
 
-    post.title = req.query.title;       
-    post.content = req.query.content;
-    post.isPublic = req.query.isPublic;
+    if(!errors.isEmpty()) {
+      res.json({
+        errors: errors
+      });
+    } else {
+      const post = await Post.findById(req.params.id).exec();
 
-    await post.save();
+      post.title = req.query.title;       
+      post.content = req.query.content;
+      post.isPublic = req.query.isPublic;
+
+      await post.save();
+    }
   },
 ]
