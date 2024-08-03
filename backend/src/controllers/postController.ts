@@ -3,8 +3,7 @@ const Post = require('../models/post');
 const User = require('../models/user');
 const Comment = require('../models/comment');
 import { query, validationResult } from 'express-validator';
-import passport from 'passport';
-const { verifyToken } = require('../utils/tokenUtils');
+const { verifyToken, cookieJwtAuth } = require('../utils/tokenUtils');
 
 exports.getPost = ( async (req:Request, res:Response, next:NextFunction) => {
   const post = await Post.findById(req.params.id).exec();
@@ -17,7 +16,6 @@ exports.getPost = ( async (req:Request, res:Response, next:NextFunction) => {
 
 exports.allPosts = ( async (req:Request, res:Response, next:NextFunction) => {
   const allPosts = await Post.find().exec();
-  console.log(allPosts);
   res.json({
     "allPosts": allPosts,
   });
@@ -39,8 +37,16 @@ exports.createPost = [
   query('isPublic').escape(), 
 
   async (req:Request, res:Response, next:NextFunction) => {
-    
-  verifyToken();
+
+    // Test this function vs cookieJwtAuth and see if either one doesnt work
+    verifyToken();
   },
 ]
 
+exports.getPostUpdate = ( async (req:Request, res:Response, next:NextFunction) => {
+  const post = await Post.findById(req.params.id).exec();
+
+  res.json({
+    post,
+  });
+});
