@@ -15,6 +15,8 @@ const app = express();
 
 mongoose.connect(process.env.DB_URL);
 
+require('./config/passport');
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
