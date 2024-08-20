@@ -1,11 +1,12 @@
 import {Request, Response, NextFunction } from 'express';
 const User = require('../models/user');
 const Post = require('../models/post');
-import { query, validationResult } from 'express-validator';
+import { query, validationResult, body } from 'express-validator';
 const genPassword = require('../utils/passwordUtils');
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const verifytoken = require('../utils/tokenUtils');
+const bcrypt = require('bcrypt');
 
 exports.signupPost = [
   query('username', 'Username must not be empty and must be at least 3 characters.').trim().notEmpty().isLength({min: 3, max: 20}).escape(),
@@ -38,16 +39,31 @@ exports.signupPost = [
 exports.loginPost =  ( async (req:Request, res:Response, next:NextFunction) => {
   const user = await User.findOne({username: req.body.username});
 
-  // Add token expiration probably about 30mins
-  jwt.sign({user}, process.env.JWT_SECRET, (err:object, token:object) => {
-    // res.json({
-    //   token
-    // });
-    res.cookie('token', token, {
-    httpOnly: true,
+  if (!user) { 
+    return res.status(401).send ({
+      success: false,
+      message: 'User does not exist',
     });
-  });
-  return res.redirect('/');
+  }
+
+  const validation = await bcrypt.compare(req.body.password, user.password);
+
+  if (!validation) {
+    return res.status(401).send ({
+      success: false,
+      message: 'Password is incorrect',
+      })
+  }
+
+  if (user) {
+    // Add token expiration probably about 30mins
+    const token = jwt.sign({user}, process.env.JWT_SECRET);
+    return res.status(200).send({
+      success: true,
+      message: 'You have been logged in.',
+      token: `Bearer ${token}`
+    })
+  }
 });
 
 exports.allUsers = ( async (req:Request, res:Response, next:NextFunction) => {
