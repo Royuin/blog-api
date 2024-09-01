@@ -22,17 +22,3 @@ function verifyToken(req:Request, res:Response, next:NextFunction) {
     return res.status(403).json({ error: 'Unauthorized user'});
   }
 };
-
-exports.cookieJwtAuth = (req:Request, res:Response, next:NextFunction) => {
-  const token = req.cookies.token;
-  try {
-    const user = jwt.verify(token, 'SECRET');
-    req.user = user;
-    next();
-  } catch (err) {
-    res.clearCookie('token');
-    return res.redirect('/');
-  }
-};
-
-module.exports.verifyToken = verifyToken;
